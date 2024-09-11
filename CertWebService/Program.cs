@@ -1,9 +1,42 @@
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Server.Kestrel.Https;
+using Microsoft.AspNetCore.Authentication.Certificate;
+using System.Security.Cryptography.X509Certificates;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+	options.ConfigureHttpsDefaults(options =>
+	{
+		options.ClientCertificateMode = ClientCertificateMode.RequireCertificate;
+	});
+});
+
+builder.Services.AddAuthentication(CertificateAuthenticationDefaults.AuthenticationScheme)
+	.AddCertificate(options => {
+		options.RevocationMode = X509RevocationMode.NoCheck;
+		options.AllowedCertificateTypes = CertificateTypes.All;
+		options.Events = new CertificateAuthenticationEvents
+		{
+			OnChallenge = context => {
+				return Task.CompletedTask;
+			},
+			OnCertificateValidated = context => {
+				context.Success();
+				return Task.CompletedTask;
+			},
+			OnAuthenticationFailed = context => {
+				context.Fail("invalid cert");
+				return Task.CompletedTask;
+			}
+		};
+	});
 
 var app = builder.Build();
 
