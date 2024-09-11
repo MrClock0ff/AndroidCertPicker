@@ -4,10 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/app_text"
-    />
+    <WebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@id/uri_edittext"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="54dp">
+    </WebView>
+    <EditText
+            android:id="@+id/uri_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:inputType="textUri"
+            android:ems="10"
+            android:hint="Enter URL here"
+            android:layout_alignParentTop="true"
+            android:imeOptions="actionGo" />
 </RelativeLayout>
