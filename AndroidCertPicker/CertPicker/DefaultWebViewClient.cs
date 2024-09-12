@@ -27,10 +27,15 @@ public class DefaultWebViewClient(Activity? activity) : WebViewClient
 			base.OnReceivedClientCertRequest(view, request);
 			return;
 		}
+
+		Tuple<IPrivateKey?, X509Certificate[]?> pair = await Task.Run(() =>
+		{
+			IPrivateKey? privateKey = KeyChain.GetPrivateKey(_activity, alias);
+			X509Certificate[]? chain = KeyChain.GetCertificateChain(_activity, alias);
+			return Task.FromResult(new Tuple<IPrivateKey?, X509Certificate[]?>(privateKey, chain));
+		});
 		
-		IPrivateKey? privateKey = KeyChain.GetPrivateKey(_activity, alias);
-		X509Certificate[]? chain = KeyChain.GetCertificateChain(_activity, alias);
-		request?.Proceed(privateKey, chain);
+		request?.Proceed(pair.Item1, pair.Item2);
 	}
 
 	protected override void Dispose(bool disposing)
