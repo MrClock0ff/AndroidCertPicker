@@ -1,4 +1,5 @@
 using System.Runtime.Versioning;
+using Android.Net.Http;
 using Android.Security;
 using Android.Webkit;
 using Java.Security;
@@ -11,7 +12,27 @@ public class DefaultWebViewClient(Activity? activity) : WebViewClient
 {
 	private Activity? _activity = activity;
 	private bool _disposed;
-	
+
+	public override void OnReceivedError(WebView? view, IWebResourceRequest? request, WebResourceError? error)
+	{
+		
+	}
+
+	public override void OnReceivedError(WebView? view, ClientError errorCode, string? description, string? failingUrl)
+	{
+		
+	}
+
+	public override void OnReceivedHttpError(WebView? view, IWebResourceRequest? request, WebResourceResponse? errorResponse)
+	{
+		
+	}
+
+	public override void OnReceivedSslError(WebView? view, SslErrorHandler? handler, SslError? error)
+	{
+		handler.Proceed();
+	}
+
 	public override async void OnReceivedClientCertRequest(WebView? view, ClientCertRequest? request)
 	{
 		if (_activity == null || !OperatingSystem.IsAndroidVersionAtLeast(23))
