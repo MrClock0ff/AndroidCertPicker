@@ -25,6 +25,7 @@ builder.Services.AddAuthentication(CertificateAuthenticationDefaults.Authenticat
 		options.Events = new CertificateAuthenticationEvents
 		{
 			OnChallenge = context => {
+				context.HandleResponse();
 				return Task.CompletedTask;
 			},
 			OnCertificateValidated = context => {
